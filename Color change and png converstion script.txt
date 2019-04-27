@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+import os
+from bs4 import BeautifulSoup as bs
+files = [f for f in os.listdir('.') if f.endswith('.svg')]
+for f in files:
+    with open(f, 'r') as fp:
+        soup = bs(fp, 'lxml-xml')
+    
+    for tag in soup.find_all('path'):
+        tag['fill']='#1a9988'
+    
+    open(f, 'w').write(soup.prettify())
+
+#!/bin/bash
+for w in 16 22 24 32 48 64 128 256; do 
+    for file in *.svg; do 
+        file2=$(echo $file|sed -e "s/svg/png/")
+        inkscape -z -f "$file" -w $w -j -e "../png/$w/$file2"
+    done
+done
+
